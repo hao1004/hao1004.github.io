@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://hao1004.github.io/"/>
-  <updated>2019-09-05T03:08:03.263Z</updated>
+  <updated>2019-09-05T06:50:18.605Z</updated>
   <id>https://hao1004.github.io/</id>
   
   <author>
@@ -15,6 +15,29 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>总结使用vue开发公众号遇到坑及解决方法</title>
+    <link href="https://hao1004.github.io/2019/09/05/%E6%80%BB%E7%BB%93%E4%BD%BF%E7%94%A8vue%E5%BC%80%E5%8F%91%E5%85%AC%E4%BC%97%E5%8F%B7%E9%81%87%E5%88%B0%E5%9D%91%E5%8F%8A%E8%A7%A3%E5%86%B3%E6%96%B9%E6%B3%95/"/>
+    <id>https://hao1004.github.io/2019/09/05/总结使用vue开发公众号遇到坑及解决方法/</id>
+    <published>2019-09-05T06:49:10.000Z</published>
+    <updated>2019-09-05T06:50:18.605Z</updated>
+    
+    <content type="html"><![CDATA[<p><code>入职新公司，使用vue开发做了一个公众号</code></p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt;&lt;code&gt;入职新公司，使用vue开发做了一个公众号&lt;/code&gt;&lt;/p&gt;
+
+      
+    
+    </summary>
+    
+    
+    
+  </entry>
   
   <entry>
     <title>Hello World</title>
