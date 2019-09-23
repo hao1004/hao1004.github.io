@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://hao1004.github.io/"/>
-  <updated>2019-09-05T06:50:18.605Z</updated>
+  <updated>2019-09-23T10:08:23.495Z</updated>
   <id>https://hao1004.github.io/</id>
   
   <author>
@@ -17,47 +17,29 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
-    <title>总结使用vue开发公众号遇到坑及解决方法</title>
-    <link href="https://hao1004.github.io/2019/09/05/%E6%80%BB%E7%BB%93%E4%BD%BF%E7%94%A8vue%E5%BC%80%E5%8F%91%E5%85%AC%E4%BC%97%E5%8F%B7%E9%81%87%E5%88%B0%E5%9D%91%E5%8F%8A%E8%A7%A3%E5%86%B3%E6%96%B9%E6%B3%95/"/>
-    <id>https://hao1004.github.io/2019/09/05/总结使用vue开发公众号遇到坑及解决方法/</id>
+    <title>总结使用vue开发微信公众号遇到的坑及解决方法</title>
+    <link href="https://hao1004.github.io/2019/09/05/%E6%80%BB%E7%BB%93%E4%BD%BF%E7%94%A8vue%E5%BC%80%E5%8F%91%E5%85%AC%E4%BC%97%E5%8F%B7%E9%81%87%E5%88%B0%E7%9A%84%E5%9D%91%E5%8F%8A%E8%A7%A3%E5%86%B3%E6%96%B9%E6%B3%95/"/>
+    <id>https://hao1004.github.io/2019/09/05/总结使用vue开发公众号遇到的坑及解决方法/</id>
     <published>2019-09-05T06:49:10.000Z</published>
-    <updated>2019-09-05T06:50:18.605Z</updated>
+    <updated>2019-09-23T10:08:23.495Z</updated>
     
-    <content type="html"><![CDATA[<p><code>入职新公司，使用vue开发做了一个公众号</code></p>]]></content>
+    <content type="html"><![CDATA[<p>入职新公司以来，使用vue开发了一个公众号，这是第一次用vue去写移动端，踩了不少坑，主要是调微信接口以及安卓iOS两个平台兼容的问题，在这里做下总结，并附上解决方法：</p><br><h4 id="iOS不支持微信sdk并发上传图片，需要递归调用"><a href="#iOS不支持微信sdk并发上传图片，需要递归调用" class="headerlink" title="iOS不支持微信sdk并发上传图片，需要递归调用"></a>iOS不支持微信sdk并发上传图片，需要递归调用</h4><p>开发中，使用了微信sdk提供的上传图片接口<code>uploadImage</code>，因为微信本身接口的限制，调用一次只能上传一张图片，于是上传多图的时候，一开始的做法是把每次调用都封装成一个promise，最后通过promise.all实现并发上传多张图片，并统一处理返回结果的，这么实现后在安卓下是没问题的，但在iOS下就悲剧了，返回直接无响应了，后面经过了解，原因是该接口在iOS下不能并发上传，只能递归调用，也就是需要每次上传完图片后，才能接着下次调用，这里贴下递归调用的实现代码，仅供参考</p><pre>  let ids = []; //ids为选择图片接口返回的本地图片链接  let index = 0;  let imgWxUrls = [];  const upload = () => {    wxHandlerMap['uploadImage'].then(handler => {      handler({        isShowProgressTips: 0,        localId: ids[index],        success: res => {          imgWxUrls.push(res.serverId);          index ++;          if (index < ids.length) {            upload();          } else {            resolve(imgWxUrls);          }        },        fail: err => {          reject(err);        }      });    });  };  upload();</pre><br><h4 id="vue引入fastclick导致的输入框点击无响应问题（iOS）"><a href="#vue引入fastclick导致的输入框点击无响应问题（iOS）" class="headerlink" title="vue引入fastclick导致的输入框点击无响应问题（iOS）"></a>vue引入fastclick导致的输入框点击无响应问题（iOS）</h4><p>为了解决移动端点击事件300毫秒的延迟，项目引入了fastclick.js，但在iOS下，会产生输入框点击无法获取焦点的问题，只有双击或者长按的时候才能使input输入框获取到焦点，网上提供的解决方法是在FastClick.prototype.focus方法里添加一段代码<code>targetElement.focus()</code>，这里建议通过引入fastClick模块，修改了focus方法后，再引入修改后的js去修复这个问题，不要直接修改node依赖包里的代码，代码如下</p><pre>  import FastClick from 'fastclick';  var deviceIsWindowsPhone = navigator.userAgent.indexOf('Windows Phone') >= 0;  var deviceIsIOS = /iP(ad|hone|od)/.test(navigator.userAgent) && !deviceIsWindowsPhone;  FastClick.prototype.focus = function(targetElement) {    var length;    // Issue #160: on iOS 7, some input elements (e.g. date datetime month) throw a vague TypeError on setSelectionRange. These elements don't have an integer value for the selectionStart and selectionEnd properties, but unfortunately that can't be used for detection because accessing the properties also throws a TypeError. Just check the type instead. Filed as Apple bug #15122724.    if (deviceIsIOS && targetElement.setSelectionRange && targetElement.type.indexOf('date') !== 0 && targetElement.type !== 'time' && targetElement.type !== 'month') {      length = targetElement.value.length;      // 添加以下一行代码      targetElement.focus();      targetElement.setSelectionRange(length, length);    } else {      targetElement.focus();    }  };  export default FastClick;</pre><br><h4 id="点击页面中部input，输入后收起键盘，页面上移不归位的问题（iOS）"><a href="#点击页面中部input，输入后收起键盘，页面上移不归位的问题（iOS）" class="headerlink" title="点击页面中部input，输入后收起键盘，页面上移不归位的问题（iOS）"></a>点击页面中部input，输入后收起键盘，页面上移不归位的问题（iOS）</h4><p>iOS下，当用户点击位于页面中部位置的input控件时，iphone键盘会弹出，此时iphone上为了让用户可以看到input控件，会将整个页面整体向上移动，但是当input失去焦点时，页面却不会自动归位，需要用户自己滑动下来才能回复原来的样子，解决方法是在失去焦点的时候，使用<code>window.scrollTo(0,0)</code>让页面归位</p><p>具体实现可以参考👉 <a href="https://segmentfault.com/a/1190000019781137?utm_source=tag-newest" target="_blank" rel="noopener">https://segmentfault.com/a/1190000019781137?utm_source=tag-newest</a><br><br></p><h4 id="点击input，fixed元素跟随键盘上移，收回键盘后，页面错位的问题（安卓）"><a href="#点击input，fixed元素跟随键盘上移，收回键盘后，页面错位的问题（安卓）" class="headerlink" title="点击input，fixed元素跟随键盘上移，收回键盘后，页面错位的问题（安卓）"></a>点击input，fixed元素跟随键盘上移，收回键盘后，页面错位的问题（安卓）</h4><p>安卓下，当页面存在fixed元素和input控件时，点击input控件，弹出键盘时，会导致fixed元素跟随页面上移，这样有可能导致fixed元素遮挡住了页面其他元素，造成用户体验不好，解决方法是在键盘弹起的时候，通过检测<code>document.documentElement.clientHeight</code>的数值小于页面初始高度，来决定隐藏fixed，当键盘收起的时候，再显示fixed元素，部分实现代码如下，hideBtn用在fixed元素的v-show指令</p><pre>  data() {    return {      docmHeight: document.documentElement.clientHeight,      showHeight: document.documentElement.clientHeight,      hideBtn: false    };  },  watch: {    showHeight() {      if (/(Android)/i.test(navigator.userAgent)) {        this.hideBtn = this.showHeight < this.docmHeight;      }    }  },  mounted() {    window.onresize = () => {      return (() => {        this.showHeight = document.documentElement.clientHeight;      })();    };  },  destroyed() {    window.onresize = null;  }</pre><br><h4 id="iOS下https协议页面发送不了http请求"><a href="#iOS下https协议页面发送不了http请求" class="headerlink" title="iOS下https协议页面发送不了http请求"></a>iOS下https协议页面发送不了http请求</h4><p>这个场景以前没碰到过，这次开发中，后端没把图片上传服的协议改成https，于是在ios下，用https协议的页面去发送一个http协议的ajax请求的时候，返回就变得有点奇怪了，不会报错，但status为0，这里贴下在vconsole调试下，返回的状态图，解决方法就是让后端把请求的服务器协议升级为https</p><p><img src="/images/wx-vue/1.png" alt><br><br></p><h4 id="iOS不能通过canplaythrough事件获取到audio时长的问题"><a href="#iOS不能通过canplaythrough事件获取到audio时长的问题" class="headerlink" title="iOS不能通过canplaythrough事件获取到audio时长的问题"></a>iOS不能通过canplaythrough事件获取到audio时长的问题</h4><p>audio/vidoe DOM的<code>oncanplaythrough</code>事件，定义为在视频/音频（audio/video）可以正常播放且无需停顿和缓冲时触发该事件，因项目中有个录音功能，在音频节点监听这个事件，主要是为了在回调里获取录音的时长，在安卓下，是可以顺利获取录音的时长的，但在iOS下，却发现获取不了，研究了下，发现在iOS里需要音频触发播放事件后，才能获取时长，网上提供了一些解决方案，办法是通过触发一次播放，然后立即暂停音频，然后再获取时长，这种方式虽然可以解决时长获取的问题，但是在音频控件上确有一个卡顿的瞬间，体验不好，思考再三，最后还是选择iOS下将时长显示为“轻触播放”等提示语，等用户点击播放后再显示时长（ps:暂时的解决方法如上，后续继续寻找更优的做法）<br><br></p><h4 id="axios传dateForm类型的坑，用qs转化最稳妥"><a href="#axios传dateForm类型的坑，用qs转化最稳妥" class="headerlink" title="axios传dateForm类型的坑，用qs转化最稳妥"></a>axios传dateForm类型的坑，用qs转化最稳妥</h4><p>虽然大部分项目都是用vue做的，但axios这个官方推荐的ajax请求工具，却是第一次使用，之前一直是搭配其他请求工具来玩耍的，这次确实在axios上踩了点坑，主要是有部分接口，需要Form形式的数据才能正常解析，一开始的做法是修改Content-Tyoe属性</p><pre>  axios.defaults.headers = {      'Content-type': 'application/x-www-form-urlencoded'  }</pre><p>设置之后看到请求时的Content-type变成了application/x-www-form格式，但是数据没变，后面找到的办法是用qs模块的stringify方法进行转化，代码如下（ps：还是要花时间研究下axios对数据转化的源码，搞明白真正的原因）</p><pre>  import axios from './http';  import qs from 'qs';  export const uploadWxResource = (params = {}) => axios.post('https://xxxx', qs.stringify(params));</pre><br><h4 id="rem布局使用雪碧图，对图标的定位需要留空白，防止错位"><a href="#rem布局使用雪碧图，对图标的定位需要留空白，防止错位" class="headerlink" title="rem布局使用雪碧图，对图标的定位需要留空白，防止错位"></a>rem布局使用雪碧图，对图标的定位需要留空白，防止错位</h4><p>站点使用雪碧图减少图标请求数的使用，是老生常谈了，关于如何使用这里不做多叙述。主要说下rem布局中使用雪碧图，需要注意的一个细节，在给图标定位的时候，需要给四边留空白空间，如下图所示，左边是在图标的边界定位和设置大小的，这个做法在某些真机上，会有图标边界错位的问题，解决方法就是像右边那样，定位图标时，给四周留空，增大图标的面积范围。<br><font color="e96900">如果你的雪碧图是自己通过ps合成的，那就按图右边的方式去定位，如果是通过构建工具生成雪碧图的，那就处理单个图标的图片，让图标图片四周留白</font><br>ps: 更好的实现方式应该考虑svg雪碧图来实现，后续研究下</p><p><img src="/images/wx-vue/2.png" alt><br><br></p><h4 id="TypeError-Cannot-read-property-‘-wrapper’-of-undefined-这个报错一般是-click事件绑定的方法不存在导致"><a href="#TypeError-Cannot-read-property-‘-wrapper’-of-undefined-这个报错一般是-click事件绑定的方法不存在导致" class="headerlink" title="TypeError: Cannot read property ‘_wrapper’ of undefined 这个报错一般是@click事件绑定的方法不存在导致"></a>TypeError: Cannot read property ‘_wrapper’ of undefined 这个报错一般是@click事件绑定的方法不存在导致</h4><p>使用vue生态的mint-ui框架开发过程中，碰到过几次如下的报错</p><p><font color="e96900">Error in nextTick: “TypeError: Cannot read property ‘_wrapper’ of undefined”</font></p><p>这个报错的主要原因是@click事件绑定的方法，在methods中不存在导致的，但该报错不是每次都有，只在特定情况下才有，并且挺有迷惑性的，具体原因还需要后续研究下相关源码才能明了<br><br></p><h4 id="用storage存储数据，应该严格使用JSON对象进行转化，避免获取到错误的数据格式"><a href="#用storage存储数据，应该严格使用JSON对象进行转化，避免获取到错误的数据格式" class="headerlink" title="用storage存储数据，应该严格使用JSON对象进行转化，避免获取到错误的数据格式"></a>用storage存储数据，应该严格使用JSON对象进行转化，避免获取到错误的数据格式</h4><p>这是个细节问题，用html5的storage存储数据时，其实只能存字符串，所以会使用JSON对象的stringify和parse方法进行转化，一般是存入的时候用stringify转成字符串，获取数据的时候再用parse转化，这次采坑主要是存入字符串数据的时候用stringify转化了，取出的时候却没有用parse再次转化，获取到实际是’”string”‘这样的数据，咋一看还以为没问题，其实是带了双引号的字符串，排错了段时间，感觉真是被自己坑死了。这里再说一个，如果要在获取数据的时候预设一个空字符串，应该是JSON.parse(‘“”‘)，直接JSON.parse(‘’)是会报错的<br><br></p><h4 id="使用vue-keep-alive-需要注意在离开组件时，对绑定的事件进行解除，以及重新进入时是否需要重新初始化参数"><a href="#使用vue-keep-alive-需要注意在离开组件时，对绑定的事件进行解除，以及重新进入时是否需要重新初始化参数" class="headerlink" title="使用vue keep-alive 需要注意在离开组件时，对绑定的事件进行解除，以及重新进入时是否需要重新初始化参数"></a>使用vue keep-alive 需要注意在离开组件时，对绑定的事件进行解除，以及重新进入时是否需要重新初始化参数</h4><p>这也是个细节问题，使用vue的缓存组件keep-alive，会多出两个生命周期钩子activated和deactivated。缓存组件的情况下，切换组件的时候，是不会销毁组件的，组件会依旧保留在内存中，这时候如果再切换回来，需要重新获取数据，或者对某些参数初始化的话，需要在activated钩子做对应的操作。同样，离开组件的时候，如果需要解除某些绑定的事件，也需要在deactivated里做操作。<br><br></p><h4 id="预加载影响带宽性能问题"><a href="#预加载影响带宽性能问题" class="headerlink" title="预加载影响带宽性能问题"></a>预加载影响带宽性能问题</h4><p>vue-cli3默认是开启路由懒加载，并且结合link标签的preload实现预加载，预加载其他分页的资源，某种程度上可以提高用户体验，但其实内在的开销（抢占 CPU 资源，消耗电池，浪费带宽等）也是高昂的，再三考虑，最后还是决定关闭这个预加载，关闭的配置很简单，如下</p><pre>  chainWebpack: config => { config.plugins.delete('prefetch'); }</pre> ]]></content>
     
     <summary type="html">
     
       
       
-        &lt;p&gt;&lt;code&gt;入职新公司，使用vue开发做了一个公众号&lt;/code&gt;&lt;/p&gt;
+        &lt;p&gt;入职新公司以来，使用vue开发了一个公众号，这是第一次用vue去写移动端，踩了不少坑，主要是调微信接口以及安卓iOS两个平台兼容的问题，在这里做下总结，并附上解决方法：&lt;/p&gt;
+&lt;br&gt;
 
+&lt;h4 id=&quot;iOS不支持微信sdk并发上传图片，需要递归调用&quot;&gt;&lt;a href=
       
     
     </summary>
     
     
     
-  </entry>
-  
-  <entry>
-    <title>Hello World</title>
-    <link href="https://hao1004.github.io/2019/09/05/hello-world/"/>
-    <id>https://hao1004.github.io/2019/09/05/hello-world/</id>
-    <published>2019-09-05T03:08:03.262Z</published>
-    <updated>2019-09-05T03:08:03.263Z</updated>
-    
-    <content type="html"><![CDATA[<p>Welcome to <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="noopener">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="noopener">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="noopener">GitHub</a>.</p><h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></figure><p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="noopener">Writing</a></p><h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure><p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="noopener">Server</a></p><h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure><p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="noopener">Generating</a></p><h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure><p>More info: <a href="https://hexo.io/docs/deployment.html" target="_blank" rel="noopener">Deployment</a></p>]]></content>
-    
-    <summary type="html">
-    
-      
-      
-        &lt;p&gt;Welcome to &lt;a href=&quot;https://hexo.io/&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;Hexo&lt;/a&gt;! This is your very first post. Check &lt;a href=&quot;https://hexo.
-      
-    
-    </summary>
-    
-    
+      <category term="vue" scheme="https://hao1004.github.io/tags/vue/"/>
     
   </entry>
   
