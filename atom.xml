@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://hao1004.github.io/"/>
-  <updated>2019-09-23T10:08:23.495Z</updated>
+  <updated>2019-11-12T08:51:10.354Z</updated>
   <id>https://hao1004.github.io/</id>
   
   <author>
@@ -15,6 +15,31 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>关于vue组件的两三事</title>
+    <link href="https://hao1004.github.io/2019/09/23/%E5%85%B3%E4%BA%8Evue%E7%BB%84%E4%BB%B6%E7%9A%84%E4%B8%A4%E4%B8%89%E4%BA%8B/"/>
+    <id>https://hao1004.github.io/2019/09/23/关于vue组件的两三事/</id>
+    <published>2019-09-23T10:49:29.000Z</published>
+    <updated>2019-11-12T08:51:10.354Z</updated>
+    
+    <content type="html"><![CDATA[<p>总结下vue组件的相关心得</p><h4 id="vue组件的分类"><a href="#vue组件的分类" class="headerlink" title="vue组件的分类"></a><font color="4964C7">vue组件的分类</font></h4><p>vue.js 组件可以分成三类：</p><p><b>分页组件：</b>由 vue-router 产生的每个页面，本质上也是一个组件，主要承载当前页面的 HTML 结构，会包含数据获取、数据整理、数据可视化等常规业务</p><p><b>业务组件：</b>与我们项目密切相关的业务组件，主要是为了实现项目某块功能而划分的组件，基本绑定了当前项目，不具有通用性，这类组件可以再划分为两种，一种是为了被其他分页复用而的组件，一种是为了拆分逻辑的组件</p><p><b>基础组件：</b>不涉及业务，独立并拥有具体功能的组件，比如日期选择器，Toast等等，高度抽象并且能通过不同配置实现不同功能，便于多个项目使用，常见的开源组件库element-ui，iView就是这一类，因为要考虑各种功能以及通用性，该类组件是开发难度最高的<br><br></p><h4 id="vue组件的通信"><a href="#vue组件的通信" class="headerlink" title="vue组件的通信"></a><font color="4964C7">vue组件的通信</font></h4><p>vue组件间的通信方式，直接看这篇文章，总结得很全面<br>👉 <a href="https://juejin.im/post/5d267dcdf265da1b957081a3" target="_blank" rel="noopener">https://juejin.im/post/5d267dcdf265da1b957081a3</a><br><br></p><h4 id="使用mixin，扩展基础组件"><a href="#使用mixin，扩展基础组件" class="headerlink" title="使用mixin，扩展基础组件"></a><font color="4964C7">使用mixin，扩展基础组件</font></h4><p>vue的mixin（混入），官网的说法：<font color="e96900">提供了一种非常灵活的方式，来分发 Vue 组件中的可复用功能。一个混入对象可以包含任意组件选项。当组件使用混入对象时，所有混入对象的选项将被“混合”进入该组件本身的选项</font>。<br>其实就是提供一个可以抽取多个组件间共用选项的对象，减少重复代码，便于维护，具体的用法和规则，请点击官网👉 <a href="https://cn.vuejs.org/v2/guide/mixins.html#%E5%85%A8%E5%B1%80%E6%B7%B7%E5%85%A5" target="_blank" rel="noopener">https://cn.vuejs.org/v2/guide/mixins.html#%E5%85%A8%E5%B1%80%E6%B7%B7%E5%85%A5</a> </p><p><font color="e96900">这里主要说下mixin的另一种使用思路，利用mixin来扩展ui框架的组件。</font><br>想象下某个业务场景，需求里有个组件，跟你目前使用的ui框架的组件很相似，但又有些功能不同，或是比ui框架的多了一些逻辑判断，或是多了些扩展，这时候你会怎么办？直接改ui框架node包的源码？或者是重新写一个组件？再或者是把node包里的源码拷出来，然后再添油加醋封装成另外一个组件？有没有一种不改node依赖包的源码，但又能扩展ui框架组件的方式呢？<br>有的，就是使用mixin。方式是<font color="e96900">新建一个组件，在组件里引入node包里对应ui框架组件，然后把引入的组件作为混入对象，混入你当前的组件。然后就可以在这个新建组件下，扩展，复写原来ui组件的功能了。</font></p><pre>  &lt;script&gt;    import button from 'mint-ui/lib/button';    export default {      mixins: [button],      name: 'yx-button',      props: {        type: {          type: String,          default: 'default',          validator(value) {            return (              [                'default',                'danger',                'primary',                'common',                'warning',                'upload',                'alter'              ].indexOf(value) > -1            );          }        }      }    };    &lt;\script&gt;</pre><p>举个栗子：引入mint-ui的button组件，对type的验证加了几种类型</p><p><b>使用这种方式需要注意的一些点：</b></p><p>1.引入的node包里的文件应该尽量选择编译后的文件，我们项目babel的配置基本都是忽略node包里的文件的，如果这时候引入的组件是未编译的源码，打包上线后，就有可能出现兼容性问题</p><p>2.如果只能引入未编译的源码组件，那就需要在babel的配置上做些调整，比如单独include需要编译的依赖包。另外如果源码里使用了语法糖，如JSX，那还需要针对这块再安装相关依赖，使编译能正常进行</p><p>3.要清晰理解混入对象选项合并的方式以及优先级，具体参考👉<a href="https://cn.vuejs.org/v2/guide/mixins.html#%E9%80%89%E9%A1%B9%E5%90%88%E5%B9%B6" target="_blank" rel="noopener">https://cn.vuejs.org/v2/guide/mixins.html#%E9%80%89%E9%A1%B9%E5%90%88%E5%B9%B6</a></p><p>（ps: 未完待续，持续更新中…）</p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt;总结下vue组件的相关心得&lt;/p&gt;
+&lt;h4 id=&quot;vue组件的分类&quot;&gt;&lt;a href=&quot;#vue组件的分类&quot; class=&quot;headerlink&quot; title=&quot;vue组件的分类&quot;&gt;&lt;/a&gt;&lt;font color=&quot;4964C7&quot;&gt;vue组件的分类&lt;/font&gt;&lt;/h4&gt;
+      
+    
+    </summary>
+    
+    
+    
+      <category term="vue" scheme="https://hao1004.github.io/tags/vue/"/>
+    
+  </entry>
   
   <entry>
     <title>总结使用vue开发微信公众号遇到的坑及解决方法</title>
