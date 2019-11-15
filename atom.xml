@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://hao1004.github.io/"/>
-  <updated>2019-11-12T08:51:10.354Z</updated>
+  <updated>2019-11-15T10:27:02.225Z</updated>
   <id>https://hao1004.github.io/</id>
   
   <author>
@@ -15,6 +15,29 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>总结git使用技巧</title>
+    <link href="https://hao1004.github.io/2019/11/12/%E6%80%BB%E7%BB%93git%E4%BD%BF%E7%94%A8%E6%8A%80%E5%B7%A7/"/>
+    <id>https://hao1004.github.io/2019/11/12/总结git使用技巧/</id>
+    <published>2019-11-12T09:02:52.000Z</published>
+    <updated>2019-11-15T10:27:02.225Z</updated>
+    
+    <content type="html"><![CDATA[<p>总结下git使用的部分技巧和心得</p><h4 id="fast-forward-和-no-fast-forward"><a href="#fast-forward-和-no-fast-forward" class="headerlink" title="fast-forward 和 no fast forward"></a><font color="4964C7">fast-forward 和 no fast forward</font></h4><p>1.A分支基于B分支，A分支在接下来的开发中提了若干commit，B分支无commit。彼时，A分支合并到B分支时，因为没有分歧需要解决，就会直接移动文件指针，合并结束后，A分支所有的commit都会直接移到B分支，就像在B分支上开发那样，这个过程叫做fast-forward</p><p>2.A分支基于B分支，A分支在接下来的开发中提了若干commit，B分支也有若干commit。彼时，A分支合并到B分支时，A分支和B分支上的commit会按照时间重新排序，并且在指针末尾添加一个“Merge branch ‘A’ into ‘B’”这样的commit，这个过程叫做no fast-forward</p><p>3.如何强行关闭fast-forward方式？在合并的时候，添加–no-ff命令，这样在上述1的情况下，也会产生一个“Merge branch ‘A’ into ‘B’”这样的commit<br><img src="/images/git/fast-forward.png" alt><br><br></p><h4 id="merge-和-rebase"><a href="#merge-和-rebase" class="headerlink" title="merge 和 rebase"></a><font color="4964C7">merge 和 rebase</font></h4><p>git merge和git rebase都是用来合并两个分支的。</p><pre>  git merge b   // 将b分支合并到当前分支  git rebase b  // 也是把b分支合并到当前分支  git pull origin b     // 从远端拉取b分支，以merge的方式合并到当前分支  git pull -r origin b  // 从远端拉取b分支，以rebase的方式合并到当前分支</pre><p><strong>1.commit历史</strong><br><font color="e96900">merge只是合并另外一个分支的内容，rebase也合并另外一个分支的内容，但是会把本分支的commits顶到最顶端</font></p><p>场景：B分支初始有个C0提交，A分支基于B分支，A分支在9:00提交了C1、12:00提交了C2， B分支在10:00提交了C3，切换到A分支</p><p>1.运行git merge B，合并的结果C0 -&gt; C1 -&gt; C3 -&gt; C2 -&gt; Merge branch ‘B’ into ‘A’ (no fast forward模式)<br>2.运行git rebase B，合并的结果C0 -&gt; C3 -&gt; C1 -&gt; C2</p><p>rebase原理：先把A分支里的每个提交(commit)取消掉，并且把它们临时 保存为补丁(patch)(这些补丁放到”.git/rebase”目录中),然后把A分支更新 为最新的B分支，最后把保存的这些补丁应用到A分支上</p><p><strong>2.解决冲突</strong><br>当合并分支时出现冲突</p><p>1.用merge只需要解决一遍冲突，冲突解决后，需要运行git-add 和 git-commit 相关命令<br>2.用rebase有时候会需要多次fix冲突（原因在于本地分支已经提交了非常多的commit，而且很久都没有和上游合并过），每个冲突解决之后，需要运行git-add 和 git rebase –continue，直至所有冲突解决。在任何时候，你可以用–abort参数来终止rebase的行动，使当前分支会回到rebase开始前的状态</p><p><strong>3.选用哪种合并方式</strong><br>选用merge还是rebase取决于你想以什么方式来避免冲突以及对commits的展示。两种方式都使用过，个人推荐rebase，因为commit的顺序能以一个更清晰的方式排列，另外就是频繁merge会导致的冗余的history join会提高所有人的认知成本。但使用rebase应该尽量及时rebase上游分支，如果闷头开发，提交了很多commit后再来rebase，可能出现需要多次解决冲突的情况，这会让人很头大<br><br></p><h4 id="fetch-和-pull"><a href="#fetch-和-pull" class="headerlink" title="fetch 和 pull"></a><font color="4964C7">fetch 和 pull</font></h4><p>fetch和pull都是git从远程分支拉取最新代码到本地的命令，相同点都是起到了更新代码的作用</p><pre>　git fetch orgin master  // 将远程的master分支下载到本地　git log -p              // 比较本地的master分支和远程的master分支的差别　git merge origin/master // 进行合并  git pull origin master  // 相当于git fetch 和 git merge</pre><p>只看上面的命令行，git pull 看起来像 git fetch + get merge，只是少了一个对比的过程，但是根据commit记录来看的话，他们实际的实现原理是不一样的</p><p>在了解原理之前，需要补充下部分知识<br>1.git分远程仓库和本地仓库，我们一般都是写完代码，commit到本地仓库，然后push到远程仓库，这个流程大家都熟悉<br>2.在本地我们git文件夹里面对应也存储了git本地仓库分支的commit记录 和 <font color="e96900">跟踪的远程分支的commit记录</font></p><figure class="highlight accesslog"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">.git/refs/head/ <span class="string">[本地分支]</span></span><br><span class="line">.git/refs/remotes/ <span class="string">[正在跟踪的分支]</span></span><br></pre></td></tr></table></figure><p>head里存放的是我们本地正在开发中的分支记录，remotes存放的是我们本地用来跟踪远程仓库的分支记录。<font color="e96900">remotes里的跟踪分支只能用git fetch，或者是git push后作为副产品（side-effect）来改变</font> ，所以上面命令行可以这么理解</p><p>1.执行git fetch orgin master 只会更新我们跟踪远程仓库的master分支记录，此时我们本地的master分支记录是不变的，然后执行git log -p 就是在对比本地master分支和追踪master分支区别，最后执行git merge origin/master，把跟踪master分支合并到本地master分支<br>2.执行git git pull origin master，把远程master分支的拉到追踪master分支，更新记录，并直接合并到本地分支<br><img src="/images/git/git-fetch-pull.png" alt></p><p><strong>总结：</strong><br><font color="e96900">尽量不要用git pull，用git fetch和git merge代替它</font><br>使用git pull虽然便捷，但往往隐藏了合并时很多细节问题，一旦合并出了问题，排查难度也大<br>使用git fetch 和 git merge 虽然繁琐，但更加安全，能避免更多丢失及冲突问题<br><br></p><h4 id="git-stash"><a href="#git-stash" class="headerlink" title="git stash"></a><font color="4964C7">git stash</font></h4><p>场景：你在某个分支开发了一段时间，突然有个bug需要在该分支修复，build之后提测。这个时候你开发的东西还不能提交，怎么办？此时就可以使用git stash</p><p>git stash 就是把你的当前分支文件的修改，储存起来，推入一个储存栈中，并把文件倒退到改动前的状态。此时你就在改动前的状态下做其他修改，等修改commit到远端后，在把储存的修改放出来。</p><pre>  git stash                    // 将当前修改储存，推入栈顶  git stash list               // 查看储存栈列表  git stash apply              // 将储存栈的栈顶的修改推出  git stash apply stash@{$num} // 将储存栈里的某个修改推出 num为栈里某个存储的编号  git stash pop                // 将储存栈的栈顶的修改推出，并且删除</pre><p>需要着重说明一点<br><font color="e96900">git stash 是不会储存新增但还没暂存到版本控制的文件</font><br><strong>例子：</strong>如果开发的目录本来就有个a.js文件，此时在a.js上面修改，修改后即使没有add到版本控制里，运行git stash 修改是能被储存起来的。如果在开发目录下新增了b.js文件，在b.js上写了代码，运行git stash，b.js是不会被储存的。如果需要储存，那就要把b.js add到版本控制，再运行git stash才能储存<br><strong>结论：</strong>被add到版本控制的文件，一定能被git stash存储，在原本就有文件的修改，不add也能被储存，新增的文件要被储存就要先add<br><br></p><h4 id="reset-和-revert"><a href="#reset-和-revert" class="headerlink" title="reset 和 revert"></a><font color="4964C7">reset 和 revert</font></h4>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt;总结下git使用的部分技巧和心得&lt;/p&gt;
+&lt;h4 id=&quot;fast-forward-和-no-fast-forward&quot;&gt;&lt;a href=&quot;#fast-forward-和-no-fast-forward&quot; class=&quot;headerlink&quot; title=&quot;fast-for
+      
+    
+    </summary>
+    
+    
+    
+  </entry>
   
   <entry>
     <title>关于vue组件的两三事</title>
