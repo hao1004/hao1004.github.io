@@ -1,0 +1,308 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta name="generator" content="Hexo 3.9.0"><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><title> Vue开发规范 · 杨俊浩的个人主页</title><meta name="description" content="Vue开发规范 - 杨俊浩"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="icon" href="/favicon.ico"><link rel="stylesheet" href="/css/prontera.css"><link rel="search" type="application/opensearchdescription+xml" href="https://hao1004.github.io/atom.xml" title="杨俊浩的个人主页"><link rel="alternate" href="/atom.xml" title="杨俊浩的个人主页" type="application/atom+xml">
+</head><body><header class="feature-header"><nav class="component-nav"><ul><div class="logo-container"><a href="/"><h2 class="title">杨俊浩的个人主页</h2></a></div><a href="/" target="_self" class="li component-nav-item"><p>首页</p></a><a href="/archives" target="_self" class="li component-nav-item"><p>归档</p></a><ul class="shortcut-icons"><a href="https://github.com/hao1004" target="_blank"><img src="/images/github.png" class="icon"></a></ul></ul></nav></header><main class="container"><div id="post-container"><div class="post"><article class="post-block"><h1 class="post-title">Vue开发规范</h1><div class="post-info">2020年12月24日</div><div class="post-content"><h1 id="前端开发规范"><a href="#前端开发规范" class="headerlink" title="前端开发规范"></a>前端开发规范</h1><h2 id="一、概述"><a href="#一、概述" class="headerlink" title="一、概述"></a>一、概述</h2><p>Vue 项目规范以 👉 <a href="https://cn.vuejs.org/v2/style-guide/" target="_blank" rel="noopener">Vue 官方规范</a> 中的规范为基础，在其上面进行项目开发，故所有代码均遵守该规范。</p>
+<blockquote>
+<p>*请仔细阅读 Vue 官方规范，切记，此为第一步。目标是不管有多少人共同参与同一项目，一定要确保每一行代码都像是同一个人编写的*</p>
+</blockquote>
+<br>
+
+<h2 id="二、环境要求"><a href="#二、环境要求" class="headerlink" title="二、环境要求"></a>二、环境要求</h2><p>1.Node.js 8.9 或更高版本，你可以使用 nvm 或 nvm-windows 在一台电脑中管理多个 Node 版本</p>
+<p>2.使用 <a href="https://code.visualstudio.com/" target="_blank" rel="noopener">Visual Studio Code (VS Code)</a> 进行代码编写</p>
+<p>3.代码提交前使用 VS Code 进行格式化（不要格式引入的外部文件）</p>
+<p>4.规定 Tab 大小为 <code>2 个空格</code>，保证在所有环境下获得一致展现</p>
+<p>5.安装插件 <a href="https://marketplace.visualstudio.com/items?itemName=octref.vetur" target="_blank" rel="noopener">Vetur</a>（ Vue 开发扩展及 Vue 文件代码格式化）</p>
+<p>6.使用 Chrome 浏览器并安装 <a href="https://chrome.google.com/webstore/detail/vuejs-devtools/nhdogjmejiglipccpnnnanhbledajbpd" target="_blank" rel="noopener">Vue.js devtools</a> 进行调试</p>
+<br>
+
+<h2 id="三、编码规范"><a href="#三、编码规范" class="headerlink" title="三、编码规范"></a>三、编码规范</h2><h3 id="Vue-组件编码规范"><a href="#Vue-组件编码规范" class="headerlink" title="Vue 组件编码规范"></a>Vue 组件编码规范</h3><h4 id="组件规范"><a href="#组件规范" class="headerlink" title="组件规范"></a>组件规范</h4><blockquote>
+<p>1.组件名为多个单词。</p>
+</blockquote>
+<p>组件名应该始终是多个单词组成（大于等于 2），且命名规范为 KebabCase 格式。<br>这样做可以避免跟现有的以及未来的 HTML 元素相冲突，因为所有的 HTML 元素名称都是单个单词的。</p>
+<p>正例：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> &#123;</span><br><span class="line">  name: <span class="string">'TodoItem'</span>,</span><br><span class="line">  <span class="comment">// ...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>反例：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> &#123;</span><br><span class="line">  name: <span class="string">'Todo'</span>,</span><br><span class="line">  <span class="comment">// ...</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> &#123;</span><br><span class="line">  name: <span class="string">'todo-item'</span>,</span><br><span class="line">  <span class="comment">// ...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>2.组件文件名为 pascal-case 格式</p>
+</blockquote>
+<p>正例：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">components/</span><br><span class="line">|- my-component.vue</span><br></pre></td></tr></table></figure>
+
+<p>反例：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">components/</span><br><span class="line">|- myComponent.vue</span><br><span class="line">|- MyComponent.vue</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>3.基础组件文件名为 base 开头，使用完整单词而不是缩写。</p>
+</blockquote>
+<p>正例：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">components/</span><br><span class="line">|- base-button.vue</span><br><span class="line">|- base-table.vue</span><br><span class="line">|- base-icon.vue</span><br></pre></td></tr></table></figure>
+
+<p>反例：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">components/</span><br><span class="line">|- MyButton.vue</span><br><span class="line">|- VueTable.vue</span><br><span class="line">|- Icon.vue</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>4.和父组件紧密耦合的子组件应该以父组件名作为前缀命名</p>
+</blockquote>
+<p>正例：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">components/</span><br><span class="line">|- todo-list.vue</span><br><span class="line">|- todo-list-item.vue</span><br><span class="line">|- todo-list-item-button.vue</span><br><span class="line">|- user-profile-options.vue （完整单词）</span><br></pre></td></tr></table></figure>
+
+<p>反例：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">components/</span><br><span class="line">|- TodoList.vue</span><br><span class="line">|- TodoItem.vue</span><br><span class="line">|- TodoButton.vue</span><br><span class="line">|- UProfOpts.vue （使用了缩写）</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>5.模板中组件名为 pascal-case 格式<code>（注：当前项目自定义标签不推荐使用自闭合组件）</code></p>
+</blockquote>
+<p>正例：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&lt;!-- 在所有地方 --&gt;</span><br><span class="line">&lt;my-component&gt;<span class="xml"><span class="tag">&lt;/<span class="name">my-component</span>&gt;</span></span></span><br></pre></td></tr></table></figure>
+
+<p>反例：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;mycomponent&gt;<span class="xml"><span class="tag">&lt;/<span class="name">mycomponent</span>&gt;</span></span></span><br><span class="line">&lt;MyComponent&gt;<span class="xml"><span class="tag">&lt;/<span class="name">MyComponent</span>&gt;</span></span></span><br><span class="line">&lt;MyComponent /&gt;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>6.组件的 data 必须是一个函数</p>
+</blockquote>
+<p>当在组件中使用 data 属性的时候 (除了 new Vue 外的任何地方)，它的值必须是返回一个对象的函数。 因为如果直接是一个对象的话，子组件之间的属性值会互相影响。<br>正例：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> &#123;</span><br><span class="line">  data() &#123;</span><br><span class="line">    <span class="keyword">return</span> &#123;</span><br><span class="line">      name: <span class="string">'jack'</span>,</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;,</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>反例：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> &#123;</span><br><span class="line">  data: &#123;</span><br><span class="line">    name: <span class="string">'jack'</span>,</span><br><span class="line">  &#125;,</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>7.Prop 定义应该尽量详细</p>
+</blockquote>
+<ul>
+<li>必须使用 camelCase 驼峰命名</li>
+<li>必须指定类型</li>
+<li>必须加上 required 或者 default，两者二选其一</li>
+<li>建议加上注释，表明其含义</li>
+<li>如果有业务需要，必须加上 validator 验证</li>
+</ul>
+<p>正例：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"> props: &#123;</span><br><span class="line">  <span class="comment">// 组件状态，用于控制组件的颜色</span></span><br><span class="line">   status: &#123;</span><br><span class="line">     type: <span class="built_in">String</span>,</span><br><span class="line">     required: <span class="literal">true</span>,</span><br><span class="line">     validator: <span class="function"><span class="keyword">function</span> (<span class="params">value</span>) </span>&#123;</span><br><span class="line">       <span class="keyword">return</span> [</span><br><span class="line">         <span class="string">'succ'</span>,</span><br><span class="line">         <span class="string">'info'</span>,</span><br><span class="line">         <span class="string">'error'</span></span><br><span class="line">       ].indexOf(value) !== <span class="number">-1</span></span><br><span class="line">     &#125;</span><br><span class="line">   &#125;,</span><br><span class="line">    <span class="comment">// 用户级别，用于显示皇冠个数</span></span><br><span class="line">   userLevel：&#123;</span><br><span class="line">      type: <span class="built_in">String</span>,</span><br><span class="line">      required: <span class="literal">true</span></span><br><span class="line">   &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>反例：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 这样做只有开发原型系统时可以接受</span></span><br><span class="line">props: [<span class="string">'status'</span>]</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>8.为组件样式设置作用域</p>
+</blockquote>
+<p>正例：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">&lt;template&gt;</span><br><span class="line">  &lt;button <span class="class"><span class="keyword">class</span></span>=<span class="string">"btn btn-close"</span>&gt;X&lt;<span class="regexp">/button&gt;</span></span><br><span class="line"><span class="regexp">&lt;/</span>template&gt;</span><br><span class="line"></span><br><span class="line">&lt;!-- 使用 <span class="string">`scoped`</span> 特性 --&gt;</span><br><span class="line">&lt;style scoped&gt;</span><br><span class="line">  .btn-close &#123;</span><br><span class="line">    background-color: red;</span><br><span class="line">  &#125;</span><br><span class="line">&lt;<span class="regexp">/style&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>反例：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&lt;template&gt;</span><br><span class="line">  &lt;button <span class="class"><span class="keyword">class</span></span>=<span class="string">"btn btn-close"</span>&gt;X&lt;<span class="regexp">/button&gt;</span></span><br><span class="line"><span class="regexp">&lt;/</span>template&gt;</span><br><span class="line">&lt;!-- 没有使用 <span class="string">`scoped`</span> 特性 --&gt;</span><br><span class="line">&lt;style&gt;</span><br><span class="line">  .btn-close &#123;</span><br><span class="line">    background-color: red;</span><br><span class="line">  &#125;</span><br><span class="line">&lt;<span class="regexp">/style&gt;</span></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>9 如果特性元素较多，应该主动换行<code>（注：该操作能交给vscode自动格式化处理）</code></p>
+</blockquote>
+<p>正例：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&lt;my-component</span><br><span class="line">  foo=<span class="string">"a"</span></span><br><span class="line">  bar=<span class="string">"b"</span></span><br><span class="line">  baz=<span class="string">"c"</span></span><br><span class="line">  foo=<span class="string">"a"</span></span><br><span class="line">  bar=<span class="string">"b"</span></span><br><span class="line">  baz=<span class="string">"c"</span></span><br><span class="line">  foo=<span class="string">"a"</span></span><br><span class="line">&gt;<span class="xml"><span class="tag">&lt;/<span class="name">my-component</span>&gt;</span></span></span><br></pre></td></tr></table></figure>
+
+<p>反例：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;my-component foo=<span class="string">"a"</span> bar=<span class="string">"b"</span> baz=<span class="string">"c"</span> foo=<span class="string">"a"</span> bar=<span class="string">"b"</span>&gt;<span class="xml"><span class="tag">&lt;/<span class="name">my-component</span>&gt;</span></span></span><br></pre></td></tr></table></figure>
+
+<h4 id="模板中使用简单的表达式"><a href="#模板中使用简单的表达式" class="headerlink" title="模板中使用简单的表达式"></a>模板中使用简单的表达式</h4><p>组件模板应该只包含简单的表达式，复杂的表达式则应该重构为计算属性或方法。复杂表达式会让你的模板变得不那么声明式。我们应该尽量描述应该出现的是什么，而非如何计算那个值。而且计算属性和方法使得代码可以重用。</p>
+<p>正例：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">&lt;template&gt;</span><br><span class="line">  &lt;p&gt;&#123;&#123; normalizedFullName &#125;&#125;&lt;<span class="regexp">/p&gt;</span></span><br><span class="line"><span class="regexp">&lt;/</span>template&gt;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 复杂表达式已经移入一个计算属性</span></span><br><span class="line">computed: &#123;</span><br><span class="line">  normalizedFullName: <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">this</span>.fullName.split(<span class="string">' '</span>).map(<span class="function"><span class="keyword">function</span> (<span class="params">word</span>) </span>&#123;</span><br><span class="line">      <span class="keyword">return</span> word[<span class="number">0</span>].toUpperCase() + word.slice(<span class="number">1</span>)</span><br><span class="line">    &#125;).join(<span class="string">' '</span>)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>反例：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&lt;template&gt;</span><br><span class="line">  &lt;p&gt;</span><br><span class="line">       &#123;&#123;</span><br><span class="line">          fullName.split(<span class="string">' '</span>).map(<span class="function"><span class="keyword">function</span> (<span class="params">word</span>) </span>&#123;</span><br><span class="line">             <span class="keyword">return</span> word[<span class="number">0</span>].toUpperCase() + word.slice(<span class="number">1</span>)</span><br><span class="line">           &#125;).join(<span class="string">' '</span>)</span><br><span class="line">        &#125;&#125;</span><br><span class="line">  &lt;<span class="regexp">/p&gt;</span></span><br><span class="line"><span class="regexp">&lt;/</span>template&gt;</span><br></pre></td></tr></table></figure>
+
+<h4 id="指令推荐都使用缩写形式，-用-表示-v-bind-、用-表示-v-on-和用-表示-v-slot"><a href="#指令推荐都使用缩写形式，-用-表示-v-bind-、用-表示-v-on-和用-表示-v-slot" class="headerlink" title="指令推荐都使用缩写形式，(用 : 表示 v-bind: 、用 @ 表示 v-on: 和用 # 表示 v-slot:)"></a>指令推荐都使用缩写形式，(用 : 表示 v-bind: 、用 @ 表示 v-on: 和用 # 表示 v-slot:)</h4><p>正例：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&lt;input</span><br><span class="line">  @input=<span class="string">"onInput"</span></span><br><span class="line">  :value=<span class="string">"newTodoText"</span></span><br><span class="line">&gt;</span><br><span class="line">&lt;template #header&gt;</span><br><span class="line">  &lt;h1&gt;Here might be a page title&lt;<span class="regexp">/h1&gt;</span></span><br><span class="line"><span class="regexp">&lt;/</span>template&gt;</span><br></pre></td></tr></table></figure>
+
+<p>反例：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&lt;input</span><br><span class="line">  v-on:input=<span class="string">"onInput"</span></span><br><span class="line">  v-bind:value=<span class="string">"newTodoText"</span></span><br><span class="line">&gt;</span><br><span class="line">&lt;template v-slot:header&gt;</span><br><span class="line">  &lt;h1&gt;Here might be a page title&lt;<span class="regexp">/h1&gt;</span></span><br><span class="line"><span class="regexp">&lt;/</span>template&gt;</span><br></pre></td></tr></table></figure>
+
+<h4 id="标签顺序保持一致"><a href="#标签顺序保持一致" class="headerlink" title="标签顺序保持一致"></a>标签顺序保持一致</h4><p>正例：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;template&gt;...&lt;<span class="regexp">/template&gt;</span></span><br><span class="line"><span class="regexp">&lt;script&gt;...&lt;/</span>script&gt;</span><br><span class="line">&lt;style&gt;...&lt;<span class="regexp">/style&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>反例：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;template&gt;...&lt;<span class="regexp">/template&gt;</span></span><br><span class="line"><span class="regexp">&lt;style&gt;...&lt;/</span>style&gt;</span><br><span class="line">&lt;script&gt;...&lt;<span class="regexp">/script&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="v-for-和-v-if-要注意的点"><a href="#v-for-和-v-if-要注意的点" class="headerlink" title="v-for 和 v-if 要注意的点"></a>v-for 和 v-if 要注意的点</h4><blockquote>
+<p>1.必须为 v-for 设置键值 key</p>
+</blockquote>
+<p>在组件上总是必须用 key 配合 v-for，以便维护内部组件及其子树的状态。甚至在元素上维护可预测的行为，比如动画中的对象固化 (object constancy)，也是一种好的做法。</p>
+<p>正例：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&lt;ul&gt;</span><br><span class="line">  &lt;li</span><br><span class="line">    v-<span class="keyword">for</span>=<span class="string">"todo in todos"</span></span><br><span class="line">    :key=<span class="string">"todo.id"</span></span><br><span class="line">  &gt;</span><br><span class="line">    &#123;&#123; todo.text &#125;&#125;</span><br><span class="line">  &lt;<span class="regexp">/li&gt;</span></span><br><span class="line"><span class="regexp">&lt;/u</span>l&gt;</span><br></pre></td></tr></table></figure>
+
+<p>反例：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;ul&gt;</span><br><span class="line">  &lt;li v-<span class="keyword">for</span>=<span class="string">"todo in todos"</span>&gt;</span><br><span class="line">    &#123;&#123; todo.text &#125;&#125;</span><br><span class="line">  &lt;<span class="regexp">/li&gt;</span></span><br><span class="line"><span class="regexp">&lt;/u</span>l&gt;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>2.永远不要把 v-if 和 v-for 同时用在同一个元素上</p>
+</blockquote>
+<p>一般我们在两种常见的情况下会倾向于这样做：</p>
+<ul>
+<li><p>为了过滤一个列表中的项目 (比如 v-for=”user in users” v-if=”user.isActive”)。在这种情形下，请将 users 替换为一个计算属性 (比如 activeUsers)，让其返回过滤后的列表。</p>
+</li>
+<li><p>为了避免渲染本应该被隐藏的列表 (比如 v-for=”user in users” v-if=”shouldShowUsers”)。这种情形下，请将 v-if 移动至容器元素上 (比如 ul、ol)。</p>
+</li>
+</ul>
+<p>正例：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">&lt;ul&gt;</span><br><span class="line">  &lt;li</span><br><span class="line">    v-<span class="keyword">for</span>=<span class="string">"user in activeUsers"</span></span><br><span class="line">    :key=<span class="string">"user.id"</span></span><br><span class="line">  &gt;</span><br><span class="line">    &#123;&#123; user.name &#125;&#125;</span><br><span class="line">  &lt;<span class="regexp">/li&gt;</span></span><br><span class="line"><span class="regexp">&lt;/u</span>l&gt;</span><br><span class="line"></span><br><span class="line">computed: &#123;</span><br><span class="line">  activeUsers: <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">this</span>.users.filter(<span class="function"><span class="keyword">function</span> (<span class="params">user</span>) </span>&#123;</span><br><span class="line">      <span class="keyword">return</span> user.isActive</span><br><span class="line">    &#125;)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&lt;<span class="selector-tag">ul</span> v-<span class="keyword">if</span>=<span class="string">"shouldShowUsers"</span>&gt;</span><br><span class="line">  &lt;li</span><br><span class="line">    v-<span class="keyword">for</span>=<span class="string">"user in users"</span></span><br><span class="line">    :key=<span class="string">"user.id"</span></span><br><span class="line">  &gt;</span><br><span class="line">    &#123;&#123; user<span class="selector-class">.name</span> &#125;&#125;</span><br><span class="line">  &lt;/li&gt;</span><br><span class="line">&lt;/ul&gt;</span><br></pre></td></tr></table></figure>
+
+<p>反例：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&lt;ul&gt;</span><br><span class="line">  &lt;li</span><br><span class="line">    v-<span class="keyword">for</span>=<span class="string">"user in users"</span></span><br><span class="line">    v-<span class="keyword">if</span>=<span class="string">"user.isActive"</span></span><br><span class="line">    :key=<span class="string">"user.id"</span></span><br><span class="line">  &gt;</span><br><span class="line">    &#123;&#123; user.name &#125;&#125;</span><br><span class="line">  &lt;<span class="regexp">/li&gt;</span></span><br><span class="line"><span class="regexp">&lt;/u</span>l&gt;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&lt;ul&gt;</span><br><span class="line">  &lt;li</span><br><span class="line">    v-<span class="keyword">for</span>=<span class="string">"user in users"</span></span><br><span class="line">    v-<span class="keyword">if</span>=<span class="string">"shouldShowUsers"</span></span><br><span class="line">    :key=<span class="string">"user.id"</span></span><br><span class="line">  &gt;</span><br><span class="line">    &#123;&#123; user<span class="selector-class">.name</span> &#125;&#125;</span><br><span class="line">  &lt;/li&gt;</span><br><span class="line">&lt;/ul&gt;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>3.如果一组 v-if + v-else 的元素类型相同，最好使用 key (比如两个&lt;div&gt;元素)</p>
+</blockquote>
+<p>默认情况下，Vue 会尽可能高效的更新 DOM。这意味着其在相同类型的元素之间切换时，会修补已存在的元素，而不是将旧的元素移除然后在同一位置添加一个新元素。如果本不相同的元素被识别为相同，则会出现意料之外的结果。</p>
+<p>正例：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">&lt;div</span><br><span class="line">  v-<span class="keyword">if</span>=<span class="string">"error"</span></span><br><span class="line">  key=<span class="string">"search-status"</span></span><br><span class="line">&gt;</span><br><span class="line">  错误：&#123;&#123; error &#125;&#125;</span><br><span class="line">&lt;<span class="regexp">/div&gt;</span></span><br><span class="line"><span class="regexp">&lt;div</span></span><br><span class="line"><span class="regexp">  v-else</span></span><br><span class="line"><span class="regexp">  key="search-results"</span></span><br><span class="line"><span class="regexp">&gt;</span></span><br><span class="line"><span class="regexp">  &#123;&#123; results &#125;&#125;</span></span><br><span class="line"><span class="regexp">&lt;/</span>div&gt;</span><br></pre></td></tr></table></figure>
+
+<p>反例：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&lt;div v-<span class="keyword">if</span>=<span class="string">"error"</span>&gt;</span><br><span class="line">  错误：&#123;&#123; error &#125;&#125;</span><br><span class="line">&lt;<span class="regexp">/div&gt;</span></span><br><span class="line"><span class="regexp">&lt;div v-else&gt;</span></span><br><span class="line"><span class="regexp">  &#123;&#123; results &#125;&#125;</span></span><br><span class="line"><span class="regexp">&lt;/</span>div&gt;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>4.v-show 与 v-if 选择</p>
+</blockquote>
+<p>如果运行时，需要非常频繁地切换，使用 v-show ；如果在运行时，条件很少改变，使用 v-if。</p>
+<h4 id="script-标签内部结构顺序"><a href="#script-标签内部结构顺序" class="headerlink" title="script 标签内部结构顺序"></a>script 标签内部结构顺序</h4><p>name &gt; components &gt; mixins &gt; props &gt; data &gt; computed &gt; watch &gt; filter &gt; 钩子函数（钩子函数按其执行顺序） &gt; methods</p>
+<h4 id="Vue-Router-规范"><a href="#Vue-Router-规范" class="headerlink" title="Vue Router 规范"></a>Vue Router 规范</h4><blockquote>
+<p>页面跳转数据传递使用路由参数</p>
+</blockquote>
+<p>页面跳转，例如 A 页面跳转到 B 页面，需要将 A 页面的数据传递到 B 页面，推荐使用 路由参数进行传参，而不是将需要传递的数据保存 vuex，然后在 B 页面取出 vuex 的数据，因为如果在 B 页面刷新会导致 vuex 数据丢失，导致 B 页面无法正常显示数据</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> id = <span class="string">'123'</span></span><br><span class="line"><span class="keyword">this</span>.$router.push(&#123; <span class="attr">name</span>: <span class="string">'userCenter'</span>, <span class="attr">query</span>: &#123; <span class="attr">id</span>: id &#125; &#125;)</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>使用路由懒加载（延迟加载）机制</p>
+</blockquote>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  path: <span class="string">'/uploadAttachment'</span>,</span><br><span class="line">  name: <span class="string">'uploadAttachment'</span>,</span><br><span class="line">  meta: &#123;</span><br><span class="line">    title: <span class="string">'上传附件'</span></span><br><span class="line">  &#125;,</span><br><span class="line">  component: <span class="function"><span class="params">()</span> =&gt;</span> <span class="keyword">import</span>(<span class="string">'@/view/components/uploadAttachment/index.vue'</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>router 中的命名规范</p>
+</blockquote>
+<p>path、childrenPoints 命名规范采用 kebab-case 命名规范（尽量 vue 文件的目录结构保持一致，因为目录、文件名都是 kebab-case，这样很方便找到对应的文件）</p>
+<p>name 命名规范采用 KebabCase 命名规范且和 component 组件名保持一致！（因为要保持 keep-alive 特性，keep-alive 按照 component 的 name 进行缓存，所以两者必须高度保持一致）</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">    children: [</span><br><span class="line">      &#123;</span><br><span class="line">        path: <span class="string">'/reload/smart-reload-list'</span>,</span><br><span class="line">        name: <span class="string">'SmartReloadList'</span>,</span><br><span class="line">        meta: &#123;</span><br><span class="line">          title: <span class="string">'SmartReload'</span>,</span><br><span class="line">          childrenPoints: [</span><br><span class="line">            &#123;</span><br><span class="line">              title: <span class="string">'查询'</span>,</span><br><span class="line">              name: <span class="string">'smart-reload-search'</span></span><br><span class="line">            &#125;,</span><br><span class="line">            &#123;</span><br><span class="line">              title: <span class="string">'执行reload'</span>,</span><br><span class="line">              name: <span class="string">'smart-reload-update'</span></span><br><span class="line">            &#125;,</span><br><span class="line">            &#123;</span><br><span class="line">              title: <span class="string">'查看执行结果'</span>,</span><br><span class="line">              name: <span class="string">'smart-reload-result'</span></span><br><span class="line">            &#125;</span><br><span class="line">          ]</span><br><span class="line">        &#125;,</span><br><span class="line">        component: <span class="function"><span class="params">()</span> =&gt;</span></span><br><span class="line">          <span class="keyword">import</span>(<span class="string">'@/views/reload/smart-reload/smart-reload-list.vue'</span>)</span><br><span class="line">      &#125;</span><br><span class="line">    ]</span><br><span class="line">  &#125;</span><br><span class="line">];</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>router 中的 path 命名规范</p>
+</blockquote>
+<p>path 除了采用 kebab-case 命名规范以外，必须以 / 开头，即使是 children 里的 path 也要以 / 开头。</p>
+<p>经常有这样的场景：某个页面有问题，要立刻找到这个 vue 文件，如果不用以/开头，path 为 parent 和 children 组成的，可能经常需要在 router 文件里搜索多次才能找到，而如果以/开头，则能立刻搜索到对应的组件</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  path: <span class="string">'/file'</span>,</span><br><span class="line">  name: <span class="string">'File'</span>,</span><br><span class="line">  component: Main,</span><br><span class="line">  meta: &#123;</span><br><span class="line">    title: <span class="string">'文件服务'</span>,</span><br><span class="line">    icon: <span class="string">'ios-cloud-upload'</span></span><br><span class="line">  &#125;,</span><br><span class="line">  children: [</span><br><span class="line">    &#123;</span><br><span class="line">      path: <span class="string">'/file/file-list'</span>,</span><br><span class="line">      name: <span class="string">'FileList'</span>,</span><br><span class="line">      component: <span class="function"><span class="params">()</span> =&gt;</span> <span class="keyword">import</span>(<span class="string">'@/views/file/file-list.vue'</span>)</span><br><span class="line">    &#125;,</span><br><span class="line">    &#123;</span><br><span class="line">      path: <span class="string">'/file/file-add'</span>,</span><br><span class="line">      name: <span class="string">'FileAdd'</span>,</span><br><span class="line">      component: <span class="function"><span class="params">()</span> =&gt;</span> <span class="keyword">import</span>(<span class="string">'@/views/file/file-add.vue'</span>)</span><br><span class="line">    &#125;,</span><br><span class="line">    &#123;</span><br><span class="line">      path: <span class="string">'/file/file-update'</span>,</span><br><span class="line">      name: <span class="string">'FileUpdate'</span>,</span><br><span class="line">      component: <span class="function"><span class="params">()</span> =&gt;</span> <span class="keyword">import</span>(<span class="string">'@/views/file/file-update.vue'</span>)</span><br><span class="line">    &#125;</span><br><span class="line">  ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<br>
+
+<h3 id="Vue-项目目录规范"><a href="#Vue-项目目录规范" class="headerlink" title="Vue 项目目录规范"></a>Vue 项目目录规范</h3><blockquote>
+<p>基础</p>
+</blockquote>
+<p>vue 项目中的所有命名尽量与后端命名统一。</p>
+<p>比如权限：后端 privilege, 前端无论 router , store, api 等都使用 privielege 单词</p>
+<blockquote>
+<p>使用 Vue-cli 脚手架</p>
+</blockquote>
+<p>永远使用最新的 vue-cli 来初始化项目，项目名按照上面的命名规范。</p>
+<blockquote>
+<p>目录说明</p>
+</blockquote>
+<p>目录名按照上面的命名规范，以 kebab-case 方式命名为主。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">src                               源码目录</span><br><span class="line">|-- api                              所有api接口</span><br><span class="line">|-- assets                           静态资源，images, icons, styles等</span><br><span class="line">|-- components                       公用组件</span><br><span class="line">|-- config                           配置信息</span><br><span class="line">|-- constants                        常量信息，项目所有Enum, 全局常量等</span><br><span class="line">|-- directives                       自定义指令</span><br><span class="line">|-- filters                          过滤器，全局工具</span><br><span class="line">|-- datas                            模拟数据，临时存放</span><br><span class="line">|-- lib                              外部引用的插件存放及修改文件</span><br><span class="line">|-- mock                             模拟接口，临时存放</span><br><span class="line">|-- plugins                          插件，全局使用</span><br><span class="line">|-- router                           路由，统一管理</span><br><span class="line">|-- store                            vuex, 统一管理</span><br><span class="line">|-- themes                           自定义样式主题</span><br><span class="line">|-- views                            视图目录</span><br><span class="line">|   |-- role                             role模块</span><br><span class="line">|   |-- |-- role-list.vue                    role列表页面</span><br><span class="line">|   |-- |-- role-add.vue                     role新建页面</span><br><span class="line">|   |-- |-- role-update.vue                  role更新页面</span><br><span class="line">|   |-- |-- common.scss                      role模块样式</span><br><span class="line">|   |-- |-- constants                        role模块通用常量文件夹</span><br><span class="line">|   |-- |-- components                       role模块通用组件文件夹</span><br><span class="line">|   |-- reviewer                         reviewer模块</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>api 目录</p>
+</blockquote>
+<ul>
+<li>文件、变量命名要与后端保持一致。</li>
+<li>此目录对应后端 API 接口，按照后端一个 controller 一个 api js 文件。若项目较大时，可以按照业务划分子目录，并与后端保持一致。</li>
+<li>api 中的方法名字要与后端 api url 尽量保持语义高度一致性。</li>
+<li>对于 api 中的每个方法要添加注释，注释与后端接口文档保持一致。</li>
+</ul>
+<p>后端 url： RoleController.java</p>
+<figure class="highlight pgsql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">// post请求:</span><br><span class="line"></span><br><span class="line">/<span class="keyword">role</span>/<span class="keyword">add</span></span><br><span class="line">/<span class="keyword">role</span>/<span class="keyword">update</span></span><br><span class="line">/<span class="keyword">role</span>/<span class="keyword">delete</span></span><br><span class="line"></span><br><span class="line">// <span class="keyword">get</span>请求:</span><br><span class="line"></span><br><span class="line">/<span class="keyword">role</span>/<span class="keyword">info</span>/&#123;id&#125;</span><br></pre></td></tr></table></figure>
+
+<p>前端： employee.js</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 添加角色</span></span><br><span class="line">postRoleAdd: <span class="function">(<span class="params">data</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">return</span> postAxios(<span class="string">'/role/add'</span>, data)</span><br><span class="line">&#125;,</span><br><span class="line"><span class="comment">// 更新角色</span></span><br><span class="line">postRoleUpdate: <span class="function">(<span class="params">data</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">return</span> postAxios(<span class="string">'/role/update'</span>, data)</span><br><span class="line">&#125;,</span><br><span class="line"><span class="comment">// 删除角色</span></span><br><span class="line">postRoleDelete: <span class="function">(<span class="params">data</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">return</span> postAxios(<span class="string">'/role/delete'</span>, data)</span><br><span class="line">&#125;,</span><br><span class="line"><span class="comment">// 获取角色信息</span></span><br><span class="line">getRoleInfo: <span class="function">(<span class="params">roleId</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">return</span> getAxios(<span class="string">'/role/info/'</span> + roleId)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>assets 目录</p>
+</blockquote>
+<p>assets 为静态资源，里面存放 images, styles, icons 等静态资源，静态资源命名格式为 kebab-case</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">|assets</span><br><span class="line">|-- icons</span><br><span class="line">|-- images</span><br><span class="line">|   |-- background-color.png</span><br><span class="line">|   |-- upload-header.png</span><br><span class="line">|-- styles</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>components 目录</p>
+</blockquote>
+<p>此目录应按照组件进行目录划分，目录命名为 kebab-case，组件命名规则也为 kebab-case</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">|components</span><br><span class="line">|-- error-log</span><br><span class="line">|   |-- index.vue</span><br><span class="line">|   |-- index.less</span><br><span class="line">|-- markdown-editor</span><br><span class="line">|   |-- index.vue</span><br><span class="line">|   |-- index.js</span><br><span class="line">|-- kebab-<span class="keyword">case</span></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>constants 目录</p>
+</blockquote>
+<p>此目录存放项目所有常量</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">|constants</span><br><span class="line">|-- index.js</span><br><span class="line">|-- role.js</span><br></pre></td></tr></table></figure>
+
+<p>例子：report.js</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 时间类型</span></span><br><span class="line">export const timeTypeArr = [</span><br><span class="line">  &#123; <span class="string">command:</span> <span class="number">0</span>, <span class="string">name:</span> <span class="string">'评论时间'</span> &#125;,</span><br><span class="line">  &#123; <span class="string">command:</span> <span class="number">1</span>, <span class="string">name:</span> <span class="string">'统计时间'</span> &#125;,</span><br><span class="line">  &#123; <span class="string">command:</span> <span class="number">2</span>, <span class="string">name:</span> <span class="string">'客人修改时间'</span> &#125;,</span><br><span class="line">  &#123; <span class="string">command:</span> <span class="number">3</span>, <span class="string">name:</span> <span class="string">'week'</span> &#125;</span><br><span class="line">];</span><br><span class="line"></span><br><span class="line"><span class="comment">// 星级变动类型</span></span><br><span class="line">export const starTypeArr = [</span><br><span class="line">  &#123; <span class="string">value:</span> <span class="number">0</span>, <span class="string">label:</span> <span class="string">'新增'</span> &#125;,</span><br><span class="line">  &#123; <span class="string">value:</span> <span class="number">1</span>, <span class="string">label:</span> <span class="string">'星级变好'</span> &#125;,</span><br><span class="line">  &#123; <span class="string">value:</span> <span class="number">2</span>, <span class="string">label:</span> <span class="string">'星级变差'</span> &#125;,</span><br><span class="line">  &#123; <span class="string">value:</span> <span class="number">3</span>, <span class="string">label:</span> <span class="string">'差评消失'</span> &#125;,</span><br><span class="line">  &#123; <span class="string">value:</span> <span class="number">4</span>, <span class="string">label:</span> <span class="string">'好评消失'</span> &#125;,</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>router 与 store 目录</p>
+</blockquote>
+<ul>
+<li><p>这两个目录一定要将业务进行拆分，不能放到一个 js 文件里。</p>
+</li>
+<li><p>router 尽量按照 views 中的结构保持一致</p>
+</li>
+<li><p>store 按照业务进行拆分不同的 js 文件</p>
+</li>
+</ul>
+<blockquote>
+<p>views 目录</p>
+</blockquote>
+<ul>
+<li>命名要与后端、router、api 等保持一致</li>
+<li>components 中组件要使用 pascal-case 规则</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">|-- views                            视图目录</span><br><span class="line">|   |-- role                             role模块名</span><br><span class="line">|   |   |-- role-list.vue                    role列表页面</span><br><span class="line">|   |   |-- role-add.vue                     role新建页面</span><br><span class="line">|   |   |-- role-update.vue                  role更新页面</span><br><span class="line">|   |   |-- common.scss                      role模块样式</span><br><span class="line">|   |   |-- components                      role模块通用组件文件夹</span><br><span class="line">|   |   |   |-- role-header.vue                        role头部组件</span><br><span class="line">|   |   |   |-- role-modal.vue                         role弹出框组件</span><br><span class="line">|   |-- reviewer                         reviewer模块</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>注释说明</p>
+</blockquote>
+<p>整理必须加注释的地方</p>
+<ul>
+<li>公共组件使用说明</li>
+<li>api 目录的接口 js 文件必须加注释</li>
+<li>store 中的 state, mutation, action 等必须加注释</li>
+<li>vue 文件中的 template 必须加注释，若文件较大添加 start end 注释</li>
+<li>vue 文件的 methods，每个 method 必须添加注释</li>
+<li>vue 文件的 data, 非常见单词要加注释</li>
+</ul>
+<h4 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h4><blockquote>
+<p>不要复制链贴代码</p>
+</blockquote>
+<ul>
+<li><p>不同组件之间能共用的代码或者模块，除非万不得已才选择复制，否则都应该封装成通用的模块文件，代码模块化要以复用性/拆分逻辑为原则</p>
+</li>
+<li><p>使用别人的代码也是一样，应尽量先理解他人的思路再去使用，而不是简单的复制链贴，这样才便于后续维护及根据业务调整</p>
+</li>
+</ul>
+<blockquote>
+<p>尽量不要手动操作 DOM</p>
+</blockquote>
+<ul>
+<li>因使用 vue 框架，所以在项目开发中尽量使用 vue 的数据驱动更新 DOM，尽量（不到万不得已）不要手动操作 DOM，包括：增删改 dom 元素、以及更改样式、添加事件等。</li>
+</ul>
+<blockquote>
+<p>删除无用代码</p>
+</blockquote>
+<ul>
+<li>因使用了 git/svn 等代码版本工具，对于无用代码必须及时删除，例如：一些调试的 console 语句、无用的弃用功能代码、无用的注释。</li>
+</ul>
+</div></article></div><div id="disqus_thread"></div></div><script>var disqus_shortname = '杨俊浩';
+var disqus_identifier = '2020/12/24/Vue开发规范/';
+var disqus_title = 'Vue开发规范';
+var disqus_url = 'https://hao1004.github.io/2020/12/24/Vue开发规范/';
+(function() {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+})();</script><script id="dsq-count-scr" src="//杨俊浩.disqus.com/count.js" async></script></main><footer class="footer-container"><div class="paginator"><a href="/2019/11/12/总结git使用技巧/" class="next">下一篇</a></div><div class="copyright"><p>© 2019 - 2021 <a href="https://hao1004.github.io">杨俊浩</a>, powered by yangjunhao.</p></div></footer><script>(function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;e=o.createElement(i);r=o.getElementsByTagName(i)[0];e.src='//www.google-analytics.com/analytics.js';r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));ga('create',"杨俊浩",'auto');ga('send','pageview');</script></body></html>
