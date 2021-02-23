@@ -1,0 +1,40 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta name="generator" content="Hexo 3.9.0"><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><title> 记录vue前端项目升级的做法 · 杨俊浩的个人主页</title><meta name="description" content="记录vue前端项目升级的做法 - 杨俊浩"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="icon" href="/favicon.ico"><link rel="stylesheet" href="/css/prontera.css"><link rel="search" type="application/opensearchdescription+xml" href="https://hao1004.github.io/atom.xml" title="杨俊浩的个人主页"><link rel="alternate" href="/atom.xml" title="杨俊浩的个人主页" type="application/atom+xml">
+</head><body><header class="feature-header"><nav class="component-nav"><ul><div class="logo-container"><a href="/"><h2 class="title">杨俊浩的个人主页</h2></a></div><a href="/" target="_self" class="li component-nav-item"><p>首页</p></a><a href="/archives" target="_self" class="li component-nav-item"><p>归档</p></a><ul class="shortcut-icons"><a href="https://github.com/hao1004" target="_blank"><img src="/images/github.png" class="icon"></a></ul></ul></nav></header><main class="container"><div id="post-container"><div class="post"><article class="post-block"><h1 class="post-title">记录vue前端项目升级的做法</h1><div class="post-info">2021年1月7日</div><div class="post-content"><h4 id="升级项目脚手架至最新的-vue-cli"><a href="#升级项目脚手架至最新的-vue-cli" class="headerlink" title="升级项目脚手架至最新的 vue-cli"></a><font color="4964C7">升级项目脚手架至最新的 vue-cli</font></h4><ul>
+<li>建议使用 npm 或者 vue ui 下载最新的 vue-cli，然后从旧项目的入口文件<code>main.js</code>入手，理清引入的模块，然后才将相关目录以及 nodo 依赖逐步引入新的脚手架，最后再去检查旧项目的构建配置，并移植到新的脚手架配置文件当中，完成升级。<br>
+
+</li>
+</ul>
+<h4 id="引入-eslint-校验工具"><a href="#引入-eslint-校验工具" class="headerlink" title="引入 eslint 校验工具"></a><font color="4964C7">引入 eslint 校验工具</font></h4><ul>
+<li>很多旧项目，在创建初始并没有使用 eslint 去校验和修正代码，因此往往会导致代码风格混乱并且不规范。这里总结下在旧项目下使用 eslint 的做法。引入 eslint 参考 vue-cli 官网提供的做法，规范风格也根据项目需求自由选择，引入后再去<code>配置 vscode 进行自动校验和修复</code>，vscode 的自动修复可以解决部分代码格式问题，之后要<code>在.eslintignore 文件下忽略旧项目的文件</code>，这里建议一开始把所有目录都忽略了，然后先对公共的 js 文件目录(如 api，utils，filters，router，directive)进行一一的校验和修正，不规范的 views 目录下的文件，在以后业务需求涉及（或者安排时间全局调整）才去取消忽略，专门修复，以此逐步的将项目代码规范化。<br>
+
+</li>
+</ul>
+<h4 id="需要后端配合的优化"><a href="#需要后端配合的优化" class="headerlink" title="需要后端配合的优化"></a><font color="4964C7">需要后端配合的优化</font></h4><ul>
+<li><p>确认是否开启 gzip；</p>
+</li>
+<li><p>有没配置好 http 缓存相关字段；</p>
+</li>
+<li><p>js 库及插件配合 webpack 的配置，不打包进源文件，将相关静态资源放置到 cdn；</p>
+</li>
+<li><p>提醒后端使用 http2 协议；</p>
+<br>
+
+</li>
+</ul>
+<h4 id="其他细节优化点"><a href="#其他细节优化点" class="headerlink" title="其他细节优化点"></a><font color="4964C7">其他细节优化点</font></h4><ul>
+<li><p>根据 vue-cli 提供的打包后的文件报告，查看是否有视图引入不合理的模块，导致文件过大，从而进行相关优化，移除或替换不合理的模块，或者重构某些过大的视图</p>
+</li>
+<li><p>对公共模块进行优化处理，发现冗余的模块要做拆分处理，经常重复的代码则考虑模块化</p>
+</li>
+<li><p>完善 README.md 文件，细节充分的说明文档，能有效减轻项目交接或者新人接手的成本</p>
+</li>
+</ul>
+</div></article></div><div id="disqus_thread"></div></div><script>var disqus_shortname = '杨俊浩';
+var disqus_identifier = '2021/01/07/记录vue前端项目升级的做法/';
+var disqus_title = '记录vue前端项目升级的做法';
+var disqus_url = 'https://hao1004.github.io/2021/01/07/记录vue前端项目升级的做法/';
+(function() {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+})();</script><script id="dsq-count-scr" src="//杨俊浩.disqus.com/count.js" async></script></main><footer class="footer-container"><div class="paginator"><a href="/2020/12/24/Vue开发规范/" class="next">下一篇</a></div><div class="copyright"><p>© 2019 - 2021 <a href="https://hao1004.github.io">杨俊浩</a>, powered by yangjunhao.</p></div></footer><script>(function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;e=o.createElement(i);r=o.getElementsByTagName(i)[0];e.src='//www.google-analytics.com/analytics.js';r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));ga('create',"杨俊浩",'auto');ga('send','pageview');</script></body></html>
